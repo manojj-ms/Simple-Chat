@@ -1,4 +1,6 @@
+const express = require('express')
 const app = require('express')()
+const path = require('path')
 const http = require('http').createServer(app)
 const io = require('socket.io')(http, {
     cors: {
@@ -15,6 +17,9 @@ io.on('connection', socket => {
         io.emit('message', { name, message })
     })
 })
+
+app.use(express.static(path.join(__dirname, '../client/build')))
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, '../client/build/index.html')))
 
 http.listen(4000, function () {
     console.log('listening on port 4000')
